@@ -140,6 +140,11 @@ const getViteServer = async (command: "dev" | "build" | "start") => {
         parentPort!.postMessage(mesg);
       }),
     ],
+    ssr: {
+      resolve: {
+        externalConditions: ["react-server"],
+      },
+    },
     resolve: {
       conditions: ["react-server"],
     },

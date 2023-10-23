@@ -61,6 +61,9 @@ const analyzeEntries = async (entriesFile: string) => {
       ),
     ],
     ssr: {
+      resolve: {
+        conditions: ["react-server"],
+      },
       noExternal: /^(?!node:)/,
     },
     resolve: {
@@ -103,6 +106,9 @@ const buildServerBundle = async (
   const serverBuildOutput = await viteBuild({
     ...configFileConfig(),
     ssr: {
+      resolve: {
+        externalConditions: ["react-server"],
+      },
       noExternal: Object.values(clientEntryFiles).map(
         // FIXME this might not work with pnpm
         (fname) =>
