@@ -1,6 +1,4 @@
 "use client";
-import "react-server-only";
-
 import { useState } from "react";
 
 export const Counter = () => {

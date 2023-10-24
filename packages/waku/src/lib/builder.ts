@@ -66,9 +66,6 @@ const analyzeEntries = async (entriesFile: string) => {
       },
       noExternal: /^(?!node:)/,
     },
-    resolve: {
-      conditions: ["react-server"],
-    },
     build: {
       write: false,
       ssr: true,
@@ -116,9 +113,6 @@ const buildServerBundle = async (
             .relative(path.join(config.root, "node_modules"), fname)
             .split("/")[0]!,
       ),
-    },
-    resolve: {
-      conditions: ["react-server"],
     },
     publicDir: false,
     build: {
