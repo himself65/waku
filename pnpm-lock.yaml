@@ -475,6 +475,37 @@ importers:
         specifier: workspace:*
         version: link:../waku
 
+  tests/react-server:
+    dependencies:
+      express:
+        specifier: ^4.18.2
+        version: 4.18.2
+      react:
+        specifier: 18.3.0-canary-a41957507-20231017
+        version: 18.3.0-canary-a41957507-20231017
+      react-dom:
+        specifier: 18.3.0-canary-a41957507-20231017
+        version: 18.3.0-canary-a41957507-20231017(react@18.3.0-canary-a41957507-20231017)
+      react-server-dom-webpack:
+        specifier: 18.3.0-canary-a41957507-20231017
+        version: 18.3.0-canary-a41957507-20231017(react-dom@18.3.0-canary-a41957507-20231017)(react@18.3.0-canary-a41957507-20231017)(webpack@5.88.2)
+      react-server-only:
+        specifier: file:./react-server-only
+        version: file:tests/react-server/react-server-only
+      waku:
+        specifier: 0.15.1
+        version: link:../../packages/waku
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.24
+        version: 18.2.24
+      '@types/react-dom':
+        specifier: ^18.2.8
+        version: 18.2.8
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -5217,3 +5248,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  file:tests/react-server/react-server-only:
+    resolution: {directory: tests/react-server/react-server-only, type: directory}
+    name: react-server-only
+    dev: false
