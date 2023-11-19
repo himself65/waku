@@ -17,6 +17,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm run compile
-      - run: pnpm -r --filter='./packages/*' --no-git-checks publish --dry-run
+      - run: pnpm -r --filter='./packages/*' --no-git-checks publish --dry-run --force
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
