@@ -20,7 +20,7 @@
     "start": "node dist/cli.js",
     "compile": "rm -rf template dist && pnpm run template && pnpm run build",
     "template": "cp -r ../../examples template/",
-    "build": "tsc -b"
+    "build": "tsc --project tsconfig.json"
   },
   "dependencies": {
     "fs-extra": "^11.1.1",
