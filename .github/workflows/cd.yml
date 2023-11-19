@@ -1,9 +1,6 @@
 name: CD
 
-on:
-  push:
-    tags:
-      - v*
+on: [push, pull_request]
 
 jobs:
   publish:
@@ -20,6 +17,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm run compile
-      - run: pnpm -r --filter='./packages/*' --no-git-checks publish
+      - run: pnpm -r --filter='./packages/*' --no-git-checks publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
