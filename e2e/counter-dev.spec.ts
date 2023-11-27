@@ -1,5 +1,6 @@
 // 01_counter dev mode, make sure development server is running correctly
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { test } from './utils.js';
 
 test('counter', async ({ page }) => {
   await page.goto('http://localhost:3002');

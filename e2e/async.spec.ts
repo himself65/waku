@@ -1,5 +1,6 @@
 // 02_async
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { test } from './utils.js';
 
 test('async', async ({ page }) => {
   await page.goto('http://localhost:3001');
