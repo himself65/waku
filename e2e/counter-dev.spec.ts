@@ -10,3 +10,12 @@ test('counter', async ({ page }) => {
   await page.click('text=Increment');
   await expect(page.locator('text=Count: 3')).toBeVisible();
 });
+
+test('SSR on dev mode should have counter', async ({ browser }) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+  });
+  const page = await context.newPage();
+  await page.goto('http://localhost:3000');
+  await expect(page.locator('.spinner')).toBeVisible();
+});
