@@ -11,11 +11,11 @@ test('counter', async ({ page }) => {
   await expect(page.locator('text=Count: 3')).toBeVisible();
 });
 
-test('SSR on dev mode should have counter', async ({ browser }) => {
+test('SSR on dev mode should have server content', async ({ browser }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
   });
   const page = await context.newPage();
   await page.goto('http://localhost:3000');
-  await expect(page.locator('.spinner')).toBeVisible();
+  await expect(page.getByText('This is a server component.')).toBeVisible();
 });
