@@ -65,6 +65,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "async-call-rpc": "^6.3.1",
     "busboy": "^1.6.0"
   },
   "devDependencies": {
