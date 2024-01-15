@@ -52,17 +52,15 @@
     }
   },
   "bin": {
-    "waku": "./dist/cli.js"
+    "waku": "./dist/bin/cli.js"
   },
   "files": [
     "src",
     "dist"
   ],
   "scripts": {
-    "dev": "swc src -d dist -w",
-    "compile": "rm -rf dist *.tsbuildinfo && pnpm run compile:code && pnpm run compile:types && cp ../../README.md .",
-    "compile:code": "swc src -d dist",
-    "compile:types": "tsc --project tsconfig.json"
+    "dev": "bunchee -w",
+    "compile": "rm -rf dist *.tsbuildinfo && bunchee && cp ../../README.md ."
   },
   "license": "MIT",
   "engines": {
@@ -76,7 +74,7 @@
     "vite": "5.0.10"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.63",
+    "bunchee": "^4.4.0",
     "rollup": "^4.9.2"
   },
   "peerDependencies": {

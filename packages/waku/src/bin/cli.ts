@@ -11,11 +11,11 @@ import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import * as swc from '@swc/core';
 
-import type { Config } from './config.js';
-import { resolveConfig } from './lib/config.js';
-import { honoMiddleware as honoDevMiddleware } from './lib/middleware/hono-dev.js';
-import { honoMiddleware as honoPrdMiddleware } from './lib/middleware/hono-prd.js';
-import { build } from './lib/builder/build.js';
+import type { Config } from '../config.js';
+import { resolveConfig } from '../lib/config.js';
+import { honoMiddleware as honoDevMiddleware } from '../lib/middleware/hono-dev.js';
+import { honoMiddleware as honoPrdMiddleware } from '../lib/middleware/hono-prd.js';
+import { build } from '../lib/builder/build.js';
 
 const require = createRequire(new URL('.', import.meta.url));
 
