@@ -3,6 +3,7 @@ import { createPages } from 'waku';
 import { RootLayout } from './templates/root-layout.js';
 import { HomePage } from './templates/home-page.js';
 import { AboutPage } from './templates/about-page.js';
+import { ContactPage } from './templates/contact-page.js';
 
 export default createPages(async ({ createPage, createLayout }) => {
   createLayout({
@@ -12,9 +13,9 @@ export default createPages(async ({ createPage, createLayout }) => {
   });
 
   createPage({
-    render: 'static',
+    render: 'dynamic',
     path: '/',
-    component: HomePage,
+    component: ContactPage,
   });
 
   createPage({

@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "waku dev --with-ssr",
-    "build": "waku build --with-ssr",
-    "start": "waku start --with-ssr"
+    "dev": "DONT_LEAK_IN_BUILD_TIME=YES waku dev",
+    "build": "DONT_LEAK_IN_BUILD_TIME=NO waku build",
+    "start": "DONT_LEAK_IN_BUILD_TIME=YES waku start"
   },
   "dependencies": {
     "react": "18.3.0-canary-6c3b8dbfe-20240226",
