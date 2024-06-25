@@ -9,6 +9,7 @@
     "compile": "pnpm -r --filter='./packages/*' run compile",
     "csb-install-FIXME": "pnpm install --no-frozen-lockfile",
     "test": "prettier -c . && eslint . && tsc -b && pnpm run --filter waku test",
+    "lint:fix": "prettier --write . && eslint --fix .",
     "e2e": "playwright test",
     "examples:dev": "(cd ./examples/${NAME} && pnpm run dev)",
     "examples:dev:01_template": "NAME=01_template pnpm run examples:dev",
@@ -52,7 +53,8 @@
     "website:dev": "(cd packages/website && pnpm run dev)",
     "website:build": "cd packages/website && pnpm run build",
     "website:vercel": "pnpm run compile && pnpm run website:build --with-vercel-static && mv packages/website/.vercel/output .vercel/",
-    "website:prd": "pnpm run website:build && (cd packages/website && pnpm start)"
+    "website:prd": "pnpm run website:build && (cd packages/website && pnpm start)",
+    "prepare": "husky"
   },
   "prettier": {
     "singleQuote": true,
@@ -79,6 +81,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^9.0.11",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "terminate": "^2.6.1",
