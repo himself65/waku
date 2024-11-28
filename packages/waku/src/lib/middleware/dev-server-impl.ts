@@ -1,10 +1,7 @@
 import { Readable, Writable } from 'node:stream';
 import { Server } from 'node:http';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import {
-  createServer as createViteServer,
-  defineConfig as defineViteConfig,
-} from 'vite';
+import { createServer as createViteServer } from 'vite';
 import viteReact from '@vitejs/plugin-react';
 
 import type { EntriesDev } from '../../minimal/server.js';
@@ -87,50 +84,48 @@ const createMainViteServer = (
   configPromise: ReturnType<typeof resolveConfig>,
 ) => {
   const vitePromise = configPromise.then(async (config) => {
-    const mergedViteConfig = await mergeUserViteConfig(
-      defineViteConfig({
-        // Since we have multiple instances of vite, different ones might overwrite the others' cache.
-        cacheDir: 'node_modules/.vite/waku-dev-server-main',
-        base: config.basePath,
-        plugins: [
-          patchReactRefresh(viteReact()),
-          nonjsResolvePlugin(),
-          devCommonJsPlugin({
-            filter: (id) => {
-              if (
-                id.includes('/node_modules/react-server-dom-webpack/') ||
-                id.includes('/node_modules/react-dom/') ||
-                id.includes('/node_modules/react/')
-              ) {
-                return true;
-              }
-            },
-          }),
-          rscRsdwPlugin(),
-          rscEnvPlugin({ isDev: true, env, config }),
-          rscPrivatePlugin(config),
-          rscManagedPlugin(config),
-          rscIndexPlugin(config),
-          rscTransformPlugin({ isClient: true, isBuild: false }),
-          rscHmrPlugin(),
-          fsRouterTypegenPlugin(config),
+    const mergedViteConfig = await mergeUserViteConfig({
+      // Since we have multiple instances of vite, different ones might overwrite the others' cache.
+      cacheDir: 'node_modules/.vite/waku-dev-server-main',
+      base: config.basePath,
+      plugins: [
+        patchReactRefresh(viteReact()),
+        nonjsResolvePlugin(),
+        devCommonJsPlugin({
+          filter: (id) => {
+            if (
+              id.includes('/node_modules/react-server-dom-webpack/') ||
+              id.includes('/node_modules/react-dom/') ||
+              id.includes('/node_modules/react/')
+            ) {
+              return true;
+            }
+          },
+        }),
+        rscRsdwPlugin(),
+        rscEnvPlugin({ isDev: true, env, config }),
+        rscPrivatePlugin(config),
+        rscManagedPlugin(config),
+        rscIndexPlugin(config),
+        rscTransformPlugin({ isClient: true, isBuild: false }),
+        rscHmrPlugin(),
+        fsRouterTypegenPlugin(config),
+      ],
+      optimizeDeps: {
+        include: ['react-server-dom-webpack/client', 'react-dom'],
+        exclude: ['waku', 'rsc-html-stream/server'],
+        entries: [
+          `${config.srcDir}/${SRC_ENTRIES}.*`,
+          // HACK hard-coded "pages"
+          `${config.srcDir}/pages/**/*.*`,
         ],
-        optimizeDeps: {
-          include: ['react-server-dom-webpack/client', 'react-dom'],
-          exclude: ['waku', 'rsc-html-stream/server'],
-          entries: [
-            `${config.srcDir}/${SRC_ENTRIES}.*`,
-            // HACK hard-coded "pages"
-            `${config.srcDir}/pages/**/*.*`,
-          ],
-        },
-        ssr: {
-          external: ['waku'],
-        },
-        appType: 'mpa',
-        server: { middlewareMode: true },
-      }),
-    );
+      },
+      ssr: {
+        external: ['waku'],
+      },
+      appType: 'mpa',
+      server: { middlewareMode: true },
+    });
     const vite = await createViteServer(mergedViteConfig);
     registerHotUpdateCallback((payload) => hotUpdate(vite, payload));
     return vite;
@@ -230,57 +225,49 @@ const createRscViteServer = (
   const dummyServer = new Server(); // FIXME we hope to avoid this hack
 
   const vitePromise = configPromise.then(async (config) => {
-    const mergedViteConfig = await mergeUserViteConfig(
-      defineViteConfig({
-        // Since we have multiple instances of vite, different ones might overwrite the others' cache.
-        cacheDir: 'node_modules/.vite/waku-dev-server-rsc',
-        plugins: [
-          viteReact(),
-          nonjsResolvePlugin(),
-          devCommonJsPlugin({}),
-          rscRsdwPlugin(),
-          rscEnvPlugin({ isDev: true, env }),
-          rscPrivatePlugin({
-            privateDir: config.privateDir,
-            hotUpdateCallback,
-          }),
-          rscManagedPlugin({
-            basePath: config.basePath,
-            srcDir: config.srcDir,
-          }),
-          rscTransformPlugin({ isClient: false, isBuild: false }),
-          rscDelegatePlugin(hotUpdateCallback),
+    const mergedViteConfig = await mergeUserViteConfig({
+      // Since we have multiple instances of vite, different ones might overwrite the others' cache.
+      cacheDir: 'node_modules/.vite/waku-dev-server-rsc',
+      plugins: [
+        viteReact(),
+        nonjsResolvePlugin(),
+        devCommonJsPlugin({}),
+        rscRsdwPlugin(),
+        rscEnvPlugin({ isDev: true, env }),
+        rscPrivatePlugin({ privateDir: config.privateDir, hotUpdateCallback }),
+        rscManagedPlugin({ basePath: config.basePath, srcDir: config.srcDir }),
+        rscTransformPlugin({ isClient: false, isBuild: false }),
+        rscDelegatePlugin(hotUpdateCallback),
+      ],
+      optimizeDeps: {
+        include: ['react-server-dom-webpack/client', 'react-dom'],
+        exclude: ['waku'],
+        entries: [
+          `${config.srcDir}/${SRC_ENTRIES}.*`,
+          // HACK hard-coded "pages"
+          `${config.srcDir}/pages/**/*.*`,
         ],
+      },
+      ssr: {
+        resolve: {
+          conditions: ['react-server'],
+          externalConditions: ['react-server'],
+        },
+        external: ['waku/middleware/context'],
+        noExternal: /^(?!node:)/,
         optimizeDeps: {
-          include: ['react-server-dom-webpack/client', 'react-dom'],
-          exclude: ['waku'],
-          entries: [
-            `${config.srcDir}/${SRC_ENTRIES}.*`,
-            // HACK hard-coded "pages"
-            `${config.srcDir}/pages/**/*.*`,
+          include: [
+            'react-server-dom-webpack/server.edge',
+            'react',
+            'react/jsx-runtime',
+            'react/jsx-dev-runtime',
           ],
+          exclude: ['waku'],
         },
-        ssr: {
-          resolve: {
-            conditions: ['react-server'],
-            externalConditions: ['react-server'],
-          },
-          external: ['waku/middleware/context'],
-          noExternal: /^(?!node:)/,
-          optimizeDeps: {
-            include: [
-              'react-server-dom-webpack/server.edge',
-              'react',
-              'react/jsx-runtime',
-              'react/jsx-dev-runtime',
-            ],
-            exclude: ['waku'],
-          },
-        },
-        appType: 'custom',
-        server: { middlewareMode: true, hmr: { server: dummyServer } },
-      }),
-    );
+      },
+      appType: 'custom',
+      server: { middlewareMode: true, hmr: { server: dummyServer } },
+    });
     const vite = await createViteServer(mergedViteConfig);
     return vite;
   });
