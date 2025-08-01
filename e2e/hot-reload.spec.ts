@@ -13,7 +13,7 @@ function modifyFile(
   replace: string,
 ) {
   const content = readFileSync(join(standaloneDir, file), 'utf-8');
-  writeFileSync(join(standaloneDir, file), content.replace(search, replace));
+  writeFileSync(join(standaloneDir, file), content.replace(search, replace), { flush: true });
 }
 
 test.skip(
